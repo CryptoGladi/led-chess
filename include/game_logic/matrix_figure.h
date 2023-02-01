@@ -25,7 +25,7 @@ enum Figure : uint8_t {
 /// @brief Матрица шашек
 struct MatrixFigure {
   /// @brief Конструктор, который везде ставит `Figure::NotUsed`
-  constexpr MatrixFigure() : figures{Figure::NotUsed} {
+  MatrixFigure() : figures{Figure::NotUsed} {
     for (auto h = 0; h < HEIGHT_MATRIX; ++h)
       for (auto w = 0; w < WIDTH_MATRIX; ++w)
         this->figures[h][w] = Figure::NotUsed;
@@ -44,36 +44,31 @@ namespace detail {
 /// @param height Координата высоты матрицы
 /// @param type_figure Сам тип фигуры для вставки
 /// @warning Вам нужно использовать его вместе с объектом (из-за this)
-constexpr void InsertLayerForMatrixFigure(MatrixFigure& matrix,
-                                          bool is_even,
-                                          uint8_t height,
-                                          Figure type_figure) noexcept {
-  for (auto w = 0; w < WIDTH_MATRIX; ++w)
-    if (!is_even && w % 2 != 0)
-      matrix.figures[height][w] = type_figure;
-    else if (is_even && w % 2 == 0)
-      matrix.figures[height][w] = type_figure;
-}
+void InsertLayerForMatrixFigure(MatrixFigure& matrix,
+                                bool is_even,
+                                uint8_t height,
+                                Figure type_figure) noexcept;
 }  // namespace detail
 
 /// @brief Получить уже генерированный (генерация происходит во время
 /// компиляции) шашки
-/// @return Сами наша матрица фигур
-constexpr MatrixFigure GetGeneratedMatrixFigure() {
-  MatrixFigure matrix_figure;
-
-  detail::InsertLayerForMatrixFigure(matrix_figure, false, 0, Figure::White);
-  detail::InsertLayerForMatrixFigure(matrix_figure, true, 1, Figure::White);
-  detail::InsertLayerForMatrixFigure(matrix_figure, false, 2, Figure::White);
-
-  detail::InsertLayerForMatrixFigure(matrix_figure, true, 3, Figure::Empty);
-  detail::InsertLayerForMatrixFigure(matrix_figure, false, 4, Figure::Empty);
-
-  detail::InsertLayerForMatrixFigure(matrix_figure, true, 5, Figure::Black);
-  detail::InsertLayerForMatrixFigure(matrix_figure, false, 6, Figure::Black);
-  detail::InsertLayerForMatrixFigure(matrix_figure, true, 7, Figure::Black);
-
-  return matrix_figure;
-}
+/// @return Сами наша матрица фигур. Типо вот так:
+///
+/// W - белые
+/// B - Чёрные
+/// E - пустые
+/// N - их нельзя использовать
+///
+/// N B N B N B N B
+/// B N B N B N B N
+/// N B N B N B N B
+/// E N E N E N E N
+/// N E N E N E N E
+/// W N W N W N W N
+/// N W N W N W N W
+/// W N W N W N W N
+///
+/// В картике https://shashki-online.com/images/game_board_64_populated.png
+MatrixFigure GetGeneratedMatrixFigure();
 };  // namespace matrix_figure
 }  // namespace game_logic

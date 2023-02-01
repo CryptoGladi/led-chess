@@ -11,5 +11,7 @@ void setup() {
 void loop() {
   auto game_logic = game_logic::GameLogic();
   auto matrix = game_logic.GetMatrix();
+
+  delay(2313);
   matrix.Print();
 }

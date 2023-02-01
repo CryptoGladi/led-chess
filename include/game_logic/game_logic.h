@@ -6,13 +6,13 @@
 
 namespace game_logic {
 
-using namespace detail::constant;
+using namespace game_logic::matrix_figure;
 
 /// @brief Вся логика игры в шашках
 class GameLogic {
  public:
   /// @brief Констуктор
-  constexpr GameLogic() : matrix(matrix_figure::GetGeneratedMatrixFigure()){};
+  GameLogic();
 
   matrix_figure::MatrixFigure& GetMatrix() noexcept;
 
