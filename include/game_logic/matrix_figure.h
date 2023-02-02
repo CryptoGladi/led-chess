@@ -6,10 +6,10 @@
 /// @brief Типы фигур в шашек
 enum TypeFigure : uint8_t {
   /// @brief Белая фигура
-  White,
+  FWhite,
 
   /// @brief Чёрная фигура
-  Black,
+  FBlack,
 
   /// @brief Пустая ячейка
   Empty,
@@ -40,7 +40,7 @@ struct MatrixFigure {
 
   /// @brief Обновить все королевы
   /// @warning Делать так каждый ход! Иначе королева может не появиться!
-  /// @return Хотя бы одна НОВАЯ королева найдена? 
+  /// @return Хотя бы одна НОВАЯ королева найдена?
   bool update_queen() noexcept;
 
   /// @brief Сама наша матрица
@@ -50,7 +50,7 @@ struct MatrixFigure {
   /// @brief Установить статус королевы по высоте матрицы и типы нужной фигуры
   /// @param height Нужная высота матрицы для изменения
   /// @param type_figure Нужный тип фигуры для статуса королевы
-  /// @return Хотя бы одна НОВАЯ королева найдена? 
+  /// @return Хотя бы одна НОВАЯ королева найдена?
   bool set_queen_in_layer(uint8_t height, TypeFigure type_figure) noexcept;
 };
 

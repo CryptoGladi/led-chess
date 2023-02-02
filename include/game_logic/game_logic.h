@@ -14,16 +14,13 @@ enum TypePlayer : uint8_t {
 };
 
 /// @brief Игрок
-struct Player
-{
-  Player(TypePlayer type) : type(type) {};
+struct Player {
+  Player(TypePlayer type) : type(type){};
 
   void change() noexcept;
 
-  private:
   TypePlayer type;
 };
-
 
 /// @brief Тип ошибки при ходе
 enum TypeErrorForMove : uint8_t {
@@ -32,22 +29,28 @@ enum TypeErrorForMove : uint8_t {
 };
 
 /// @brief Результат (всё успешно) при ходе
-struct ResultForMove
-{
+struct ResultForMove {
   /// @brief Была найдена новая королева
   bool found_new_queen;
 };
 
 /// @brief Статус хода
-union StatusMove
-{
+union StatusMove {
   /// @brief Тип ошибки
-  TypeErrorForMove type_error;
+  TypeErrorForMove error;
 
   /// @brief Результат (если нет ошибок)
-  ResultForMove result_info;
+  ResultForMove result;
 };
 
+namespace detail {
+StatusMove ReturnResultMove(ResultForMove result, bool& is_successful) noexcept;
+
+StatusMove ReturnErrorMove(TypeErrorForMove error,
+                           bool& is_successful) noexcept;
+
+void PrintStatusMove(StatusMove status_move, bool is_successful) noexcept;
+}  // namespace detail
 
 /// @brief Вся логика игры в шашках
 class GameLogic {
@@ -59,16 +62,18 @@ class GameLogic {
   MatrixFigure& get_matrix() noexcept;
 
   /// @brief Совершить ход
-  /// @param height Высота фигуры в матрице
-  /// @param width Ширина фигуры в матрице
+  /// @param to_height Высота фигуры в матрице КОТОРАЯ БУДЕТ ХОДИТЬ
+  /// @param to_width Ширина фигуры в матрице КОТОРАЯ БУДЕТ ХОДИТЬ
+  /// @param from_height Высота фигуры в матрице НА КОТОРОЙ ОНА ДОЛЖНА БЫТЬ
+  /// @param from_width Ширина фигуры в матрице НА КОТОРОЙ ОНА ДОЛЖНА БЫТЬ
   /// @param is_successful Всё совершилось успешно?
   /// @return Статус
-  StatusMove move(uint8_t height, uint8_t width, bool& is_successful) noexcept;
+  StatusMove move(uint8_t to_height, uint8_t to_width, uint8_t from_height, uint8_t from_width, bool& is_successful) noexcept;
 
   /// @brief Кто сейчас делает ход?
   Player get_who_make_next_move() noexcept;
 
  private:
   MatrixFigure matrix;
-  Player who_make_next_move = Player(TypePlayer::NWhite);
+  Player player = Player(TypePlayer::NWhite);
 };

@@ -6,10 +6,10 @@ void MatrixFigure::print() noexcept {
   for (int h = 0; h < detail::HEIGHT_MATRIX; h++) {
     for (int w = 0; w < detail::WIDTH_MATRIX; w++) {
       switch (this->figures[h][w].type) {
-        case White:
+        case FWhite:
           Serial.print("W");
           break;
-        case Black:
+        case FBlack:
           Serial.print("B");
           break;
         case Empty:
@@ -31,8 +31,8 @@ void MatrixFigure::print() noexcept {
 }
 
 bool MatrixFigure::update_queen() noexcept {
-  bool is_changed_for_white = set_queen_in_layer(0, TypeFigure::White);
-  bool is_changed_for_black = set_queen_in_layer(0, TypeFigure::Black);
+  bool is_changed_for_white = set_queen_in_layer(0, TypeFigure::FWhite);
+  bool is_changed_for_black = set_queen_in_layer(7, TypeFigure::FBlack);
 
   return is_changed_for_white || is_changed_for_black;
 }
@@ -66,19 +66,19 @@ MatrixFigure GetGeneratedMatrixFigure() noexcept {
   MatrixFigure matrix_figure;
 
   detail::InsertLayerForMatrixFigure(matrix_figure, false, 0,
-                                     TypeFigure::Black);
-  detail::InsertLayerForMatrixFigure(matrix_figure, true, 1, TypeFigure::Black);
+                                     TypeFigure::FBlack);
+  detail::InsertLayerForMatrixFigure(matrix_figure, true, 1, TypeFigure::FBlack);
   detail::InsertLayerForMatrixFigure(matrix_figure, false, 2,
-                                     TypeFigure::Black);
+                                     TypeFigure::FBlack);
 
   detail::InsertLayerForMatrixFigure(matrix_figure, true, 3, TypeFigure::Empty);
   detail::InsertLayerForMatrixFigure(matrix_figure, false, 4,
                                      TypeFigure::Empty);
 
-  detail::InsertLayerForMatrixFigure(matrix_figure, true, 5, TypeFigure::White);
+  detail::InsertLayerForMatrixFigure(matrix_figure, true, 5, TypeFigure::FWhite);
   detail::InsertLayerForMatrixFigure(matrix_figure, false, 6,
-                                     TypeFigure::White);
-  detail::InsertLayerForMatrixFigure(matrix_figure, true, 7, TypeFigure::White);
+                                     TypeFigure::FWhite);
+  detail::InsertLayerForMatrixFigure(matrix_figure, true, 7, TypeFigure::FWhite);
 
   return matrix_figure;
 }
