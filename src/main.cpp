@@ -3,15 +3,17 @@
 
 void setup() {
   Serial.begin(921600);
-
-  auto game_logic = game_logic::GameLogic();
-  auto matrix = game_logic.GetMatrix();
 }
 
 void loop() {
-  auto game_logic = game_logic::GameLogic();
-  auto matrix = game_logic.GetMatrix();
+  auto game_logic = GameLogic();
+  auto matrix = game_logic.get_matrix();
 
   delay(2313);
-  matrix.Print();
+  Serial.println("Без проверки королевы");
+  matrix.print();
+
+  Serial.println("С проверкой королевы");
+  
+  matrix.print();
 }

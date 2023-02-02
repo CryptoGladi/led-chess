@@ -3,12 +3,8 @@
 #include <Arduino.h>
 #include "detail.h"
 
-namespace game_logic {
-namespace matrix_figure {
-using namespace game_logic::detail::constant;
-
 /// @brief Типы фигур в шашек
-enum Figure : uint8_t {
+enum TypeFigure : uint8_t {
   /// @brief Белая фигура
   White,
 
@@ -22,20 +18,40 @@ enum Figure : uint8_t {
   NotUsed,
 };
 
+struct Figure {
+  /// @brief Тип нашей фигуры
+  TypeFigure type;
+
+  /// @brief Фигура королева?
+  bool is_queen = false;
+};
+
 /// @brief Матрица шашек
 struct MatrixFigure {
   /// @brief Конструктор, который везде ставит `Figure::NotUsed`
-  MatrixFigure() : figures{Figure::NotUsed} {
-    for (auto h = 0; h < HEIGHT_MATRIX; ++h)
-      for (auto w = 0; w < WIDTH_MATRIX; ++w)
-        this->figures[h][w] = Figure::NotUsed;
+  MatrixFigure() {
+    for (auto h = 0; h < detail::HEIGHT_MATRIX; ++h)
+      for (auto w = 0; w < detail::WIDTH_MATRIX; ++w)
+        this->figures[h][w] = Figure{.type = NotUsed};
   }
 
-  /// @brief Напечать их в Serial
-  void Print() noexcept;
+  /// @brief Напечать матрицу/figures в Serial
+  void print() noexcept;
+
+  /// @brief Обновить все королевы
+  /// @warning Делать так каждый ход! Иначе королева может не появиться!
+  /// @return Хотя бы одна НОВАЯ королева найдена? 
+  bool update_queen() noexcept;
 
   /// @brief Сама наша матрица
-  Figure figures[HEIGHT_MATRIX][WIDTH_MATRIX];
+  Figure figures[detail::HEIGHT_MATRIX][detail::WIDTH_MATRIX];
+
+ private:
+  /// @brief Установить статус королевы по высоте матрицы и типы нужной фигуры
+  /// @param height Нужная высота матрицы для изменения
+  /// @param type_figure Нужный тип фигуры для статуса королевы
+  /// @return Хотя бы одна НОВАЯ королева найдена? 
+  bool set_queen_in_layer(uint8_t height, TypeFigure type_figure) noexcept;
 };
 
 namespace detail {
@@ -47,7 +63,7 @@ namespace detail {
 void InsertLayerForMatrixFigure(MatrixFigure& matrix,
                                 bool is_even,
                                 uint8_t height,
-                                Figure type_figure) noexcept;
+                                TypeFigure type_figure) noexcept;
 }  // namespace detail
 
 /// @brief Получить уже генерированный (генерация происходит во время
@@ -56,8 +72,9 @@ void InsertLayerForMatrixFigure(MatrixFigure& matrix,
 ///
 /// W - белые
 /// B - Чёрные
-/// E - пустые
+/// E - пустые (использовать можно!)
 /// N - их нельзя использовать
+/// ! - фигура королева
 ///
 /// N B N B N B N B
 /// B N B N B N B N
@@ -69,6 +86,4 @@ void InsertLayerForMatrixFigure(MatrixFigure& matrix,
 /// W N W N W N W N
 ///
 /// В картике https://shashki-online.com/images/game_board_64_populated.png
-MatrixFigure GetGeneratedMatrixFigure();
-};  // namespace matrix_figure
-}  // namespace game_logic
+MatrixFigure GetGeneratedMatrixFigure() noexcept;
