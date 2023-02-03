@@ -43,7 +43,10 @@ struct MatrixFigure {
   /// @return Хотя бы одна НОВАЯ королева найдена?
   bool update_queen() noexcept;
 
-  /// @brief Сама наша матрица
+  /// @brief Изменить что-то в матрице
+  void set_matrix(size_t height, size_t width, Figure figure) noexcept;
+
+  // @brief Сама наша матрица
   Figure figures[detail::HEIGHT_MATRIX][detail::WIDTH_MATRIX];
 
  private:

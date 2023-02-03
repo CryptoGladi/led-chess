@@ -20,10 +20,7 @@ void MatrixFigure::print() noexcept {
           break;
       }
 
-      if (this->figures[h][w].is_queen)
-        Serial.print("!");
-
-      Serial.print(" ");
+      Serial.print(this->figures[h][w].is_queen ? "! " : " ");
     }
 
     Serial.println("");
@@ -35,6 +32,12 @@ bool MatrixFigure::update_queen() noexcept {
   bool is_changed_for_black = set_queen_in_layer(7, TypeFigure::FBlack);
 
   return is_changed_for_white || is_changed_for_black;
+}
+
+void MatrixFigure::set_matrix(size_t height,
+                              size_t width,
+                              Figure figure) noexcept {
+  this->figures[height][width] = figure;
 }
 
 void detail::InsertLayerForMatrixFigure(MatrixFigure& matrix,
@@ -67,7 +70,8 @@ MatrixFigure GetGeneratedMatrixFigure() noexcept {
 
   detail::InsertLayerForMatrixFigure(matrix_figure, false, 0,
                                      TypeFigure::FBlack);
-  detail::InsertLayerForMatrixFigure(matrix_figure, true, 1, TypeFigure::FBlack);
+  detail::InsertLayerForMatrixFigure(matrix_figure, true, 1,
+                                     TypeFigure::FBlack);
   detail::InsertLayerForMatrixFigure(matrix_figure, false, 2,
                                      TypeFigure::FBlack);
 
@@ -75,10 +79,12 @@ MatrixFigure GetGeneratedMatrixFigure() noexcept {
   detail::InsertLayerForMatrixFigure(matrix_figure, false, 4,
                                      TypeFigure::Empty);
 
-  detail::InsertLayerForMatrixFigure(matrix_figure, true, 5, TypeFigure::FWhite);
+  detail::InsertLayerForMatrixFigure(matrix_figure, true, 5,
+                                     TypeFigure::FWhite);
   detail::InsertLayerForMatrixFigure(matrix_figure, false, 6,
                                      TypeFigure::FWhite);
-  detail::InsertLayerForMatrixFigure(matrix_figure, true, 7, TypeFigure::FWhite);
+  detail::InsertLayerForMatrixFigure(matrix_figure, true, 7,
+                                     TypeFigure::FWhite);
 
   return matrix_figure;
 }

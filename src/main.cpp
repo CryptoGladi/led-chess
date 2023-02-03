@@ -9,19 +9,9 @@ void loop() {
   auto game_logic = GameLogic();
 
   delay(2313);
-  //Serial.println("Без проверки королевы");
-  //matrix.print();
 
-  Serial.println("С проверкой королевы");
   bool is_successful = false;
-  auto status = game_logic.move(7, 0, NULL, NULL, is_successful);
-
-  if (status.result.found_new_queen) {
-    Serial.println("Всё работает!");
-  }
-  else {
-    Serial.println("Не работает!");
-  }
+  auto status = game_logic.move(7, 0, 0, 3, is_successful);
 
   detail::PrintStatusMove(status, is_successful);
   game_logic.get_matrix().print();
