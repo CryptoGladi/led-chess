@@ -16,7 +16,7 @@ enum TypePlayer : uint8_t {
 
 /// @brief Игрок
 struct Player {
-  Player(TypePlayer type) : type(type){};
+  explicit Player(TypePlayer type) : type(type){};
 
   void change() noexcept;
 

@@ -1,14 +1,19 @@
 #pragma once
 
+#include "macro.h"
 #include "matrix_figure.h"
 
 /// @brief Тип ошибки при ходе
 enum TypeErrorForMove : uint8_t {
   /// @brief Фигура не подчиниется игроку. Значит сейчас ходит другой игрок!
+  /// @warning Реализация этой ошибки только в game_logic.cpp
   FigureNotObeyThePlayer,
 
-  /// @brief Фигура выходит за границу
-  FigureGoesOutOfBounds
+  /// @brief Фигура захотела пойти в неиспользуемую клетку
+  FigureGoToNotUsed,
+
+  /// @brief
+  BufferOverflow
 };
 
 /// @brief Результат (всё успешно) при ходе
@@ -51,7 +56,11 @@ struct MoveEngine {
   StatusMove move() noexcept;
 
  private:
+  bool check_buffer_overflow() noexcept;
+
   bool check_not_used_matrix() noexcept;
+
+  bool check_possibility() noexcept;
 
   MatrixFigure& matrix;
   uint8_t to_height;

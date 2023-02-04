@@ -26,8 +26,8 @@ void detail::PrintStatusMove(StatusMove status, bool is_successful) noexcept {
   } else {
     Serial.print("Error = ");
 
-    if (status.error == FigureGoesOutOfBounds) {
-      Serial.print("FigureGoesOutOfBounds");
+    if (status.error == FigureGoToNotUsed) {
+      Serial.print("FigureGoToNotUsed");
     } else if (status.error == FigureNotObeyThePlayer) {
       Serial.print("FigureNotObeyThePlayer");
     }
@@ -37,9 +37,11 @@ void detail::PrintStatusMove(StatusMove status, bool is_successful) noexcept {
 }
 
 StatusMove detail::MoveEngine::move() noexcept {
+  if (!check_buffer_overflow())
+    return ReturnErrorMove(BufferOverflow, this->is_successful);
+
   if (!check_not_used_matrix())
-    return ReturnErrorMove(TypeErrorForMove::FigureGoesOutOfBounds,
-                           this->is_successful);
+    return ReturnErrorMove(FigureGoToNotUsed, this->is_successful);
 
   auto new_figure = this->matrix.figures[to_height][to_width];
   this->matrix.figures[to_height][to_width] =
@@ -52,9 +54,31 @@ StatusMove detail::MoveEngine::move() noexcept {
                           this->is_successful);
 }
 
+bool detail::MoveEngine::check_buffer_overflow() noexcept {
+  if (this->to_height > HEIGHT_MATRIX || this->from_height > HEIGHT_MATRIX)
+    return false;
+  if (this->to_width > WIDTH_MATRIX || this->from_width > WIDTH_MATRIX)
+    return false;
+
+  return true;
+}
+
 bool detail::MoveEngine::check_not_used_matrix() noexcept {
   if (this->matrix.figures[this->from_height][this->from_width].type == NotUsed)
     return false;
+
+  return true;
+}
+
+bool detail::MoveEngine::check_possibility() noexcept {
+  auto figure_for_check = matrix.figures[this->to_height][this->to_width];
+  uint8_t maximum_stroke_length =
+      figure_for_check.is_queen ? macro::MAX(HEIGHT_MATRIX, WIDTH_MATRIX) : 1;
+
+  // TODO сделать рейдинг линий (чтобы проверять возможность хода) и узнать
+  // расстояние от начального положение нашей фигуры.
+  // if ((this->to_height - 1) == this->from_height || ((this->to_height - 1) ==
+  // this->from_height))
 
   return true;
 }
