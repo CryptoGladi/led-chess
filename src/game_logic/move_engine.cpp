@@ -43,6 +43,9 @@ StatusMove detail::MoveEngine::move() noexcept {
   if (!check_not_used_matrix())
     return ReturnErrorMove(FigureGoToNotUsed, this->is_successful);
 
+  if (!check_possibility())
+    return ReturnErrorMove(NoMovePossible, this->is_successful);
+
   auto new_figure = this->matrix.figures[to_height][to_width];
   this->matrix.figures[to_height][to_width] =
       Figure{.type = Empty, .is_queen = false};
@@ -75,10 +78,35 @@ bool detail::MoveEngine::check_possibility() noexcept {
   uint8_t maximum_stroke_length =
       figure_for_check.is_queen ? macro::MAX(HEIGHT_MATRIX, WIDTH_MATRIX) : 1;
 
+  auto all_possible_moves = get_all_possible_moves();
+
+  // for (size_t i = this.;)
+
   // TODO сделать рейдинг линий (чтобы проверять возможность хода) и узнать
   // расстояние от начального положение нашей фигуры.
   // if ((this->to_height - 1) == this->from_height || ((this->to_height - 1) ==
   // this->from_height))
 
   return true;
+}
+
+detail::AllPossibleMoves detail::MoveEngine::get_all_possible_moves() noexcept {
+  AllPossibleMoves result;
+
+  for (;;) {
+  }
+
+  return result;
+}
+
+detail::coordinates_t detail::MoveEngine::get_possible_moves(
+    int16_t change_height,
+    int16_t change_width) noexcept {
+  detail::coordinates_t result;
+
+  for (;;) {
+    // TODO Проверка на buffer overflow
+
+    uint8_t lll = this->from_height + change_height;
+  }
 }

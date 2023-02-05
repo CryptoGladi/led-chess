@@ -1,5 +1,6 @@
 #pragma once
 
+#include <List.h>
 #include "macro.h"
 #include "matrix_figure.h"
 
@@ -12,8 +13,11 @@ enum TypeErrorForMove : uint8_t {
   /// @brief Фигура захотела пойти в неиспользуемую клетку
   FigureGoToNotUsed,
 
-  /// @brief
-  BufferOverflow
+  /// @brief Вы выходите за границы!
+  BufferOverflow,
+
+  /// @brief Ход невозможен
+  NoMovePossible
 };
 
 /// @brief Результат (всё успешно) при ходе
@@ -39,6 +43,20 @@ StatusMove ReturnErrorMove(TypeErrorForMove error,
 
 void PrintStatusMove(StatusMove status_move, bool is_successful) noexcept;
 
+struct Coordinate {
+  uint8_t height;
+  uint8_t width;
+};
+
+using coordinates_t = list<Coordinate>;
+
+struct AllPossibleMoves {
+  coordinates_t forward_left;
+  coordinates_t forward_right;
+  coordinates_t back_left;
+  coordinates_t back_right;
+};
+
 struct MoveEngine {
   MoveEngine(MatrixFigure& matrix,
              uint8_t to_height,
@@ -61,6 +79,11 @@ struct MoveEngine {
   bool check_not_used_matrix() noexcept;
 
   bool check_possibility() noexcept;
+
+  AllPossibleMoves get_all_possible_moves() noexcept;
+
+  coordinates_t get_possible_moves(int16_t change_height,
+                                   int16_t change_width) noexcept;
 
   MatrixFigure& matrix;
   uint8_t to_height;
