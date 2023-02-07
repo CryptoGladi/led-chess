@@ -46,10 +46,10 @@ StatusMove detail::MoveEngine::move() noexcept {
   if (!check_possibility())
     return ReturnErrorMove(NoMovePossible, this->is_successful);
 
-  auto new_figure = this->matrix.figures[to_height][to_width];
-  this->matrix.figures[to_height][to_width] =
+  auto new_figure = this->matrix.get_figure(to_height, to_width);
+  this->matrix.get_figure(to_height, to_width) =
       Figure{.type = Empty, .is_queen = false};
-  this->matrix.figures[from_height][from_width] = new_figure;
+  this->matrix.get_figure(from_height, from_width) = new_figure;
 
   Serial.println("Done detail::MoveEngine::move");
   bool found_new_queen = this->matrix.update_queen();
@@ -60,6 +60,7 @@ StatusMove detail::MoveEngine::move() noexcept {
 bool detail::MoveEngine::check_buffer_overflow() noexcept {
   if (this->to_height > HEIGHT_MATRIX || this->from_height > HEIGHT_MATRIX)
     return false;
+
   if (this->to_width > WIDTH_MATRIX || this->from_width > WIDTH_MATRIX)
     return false;
 
@@ -67,25 +68,19 @@ bool detail::MoveEngine::check_buffer_overflow() noexcept {
 }
 
 bool detail::MoveEngine::check_not_used_matrix() noexcept {
-  if (this->matrix.figures[this->from_height][this->from_width].type == NotUsed)
+  if (this->matrix.get_figure(to_height, to_width).type == NotUsed)
+    return false;
+
+  if (this->matrix.get_figure(from_height, from_width).type == NotUsed)
     return false;
 
   return true;
 }
 
 bool detail::MoveEngine::check_possibility() noexcept {
-  auto figure_for_check = matrix.figures[this->to_height][this->to_width];
-  uint8_t maximum_stroke_length =
-      figure_for_check.is_queen ? macro::MAX(HEIGHT_MATRIX, WIDTH_MATRIX) : 1;
-
   auto all_possible_moves = get_all_possible_moves();
 
-  // for (size_t i = this.;)
-
-  // TODO сделать рейдинг линий (чтобы проверять возможность хода) и узнать
-  // расстояние от начального положение нашей фигуры.
-  // if ((this->to_height - 1) == this->from_height || ((this->to_height - 1) ==
-  // this->from_height))
+  // TODO проверка на тип фигуры
 
   return true;
 }
@@ -93,8 +88,10 @@ bool detail::MoveEngine::check_possibility() noexcept {
 detail::AllPossibleMoves detail::MoveEngine::get_all_possible_moves() noexcept {
   AllPossibleMoves result;
 
-  for (;;) {
-  }
+  result.forward_left = get_possible_moves(+1, -1);
+  result.forward_right = get_possible_moves(+1, +1);
+  result.back_left = get_possible_moves(-1, -1);
+  result.back_right = get_possible_moves(-1, +1);
 
   return result;
 }
@@ -103,10 +100,26 @@ detail::coordinates_t detail::MoveEngine::get_possible_moves(
     int16_t change_height,
     int16_t change_width) noexcept {
   detail::coordinates_t result;
+  Coordinate last_coordinate = {.height = this->to_height,
+                                .width = this->to_width};
+  auto figure_for_check = matrix.get_figure(this->to_height, this->to_width);
+  uint8_t maximum_stroke_length =
+      figure_for_check.is_queen ? macro::MAX(HEIGHT_MATRIX, WIDTH_MATRIX) : 1;
 
+  uint8_t i = 0;
   for (;;) {
-    // TODO Проверка на buffer overflow
+    if (last_coordinate.height < abs(change_height) ||
+        last_coordinate.width < abs(change_width) || maximum_stroke_length == i)
+      break;
 
-    uint8_t lll = this->from_height + change_height;
+    uint8_t new_height = last_coordinate.height + change_height;
+    uint8_t new_width = last_coordinate.width + change_width;
+    auto new_coordinate = Coordinate{.height = new_height, .width = new_width};
+
+    last_coordinate = new_coordinate;
+    result.insertBack(&new_coordinate);
+    ++i;
   }
+
+  return result;
 }

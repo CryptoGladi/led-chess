@@ -1,6 +1,7 @@
 #pragma once
 
 #include <List.h>
+#include <math.h>
 #include "macro.h"
 #include "matrix_figure.h"
 

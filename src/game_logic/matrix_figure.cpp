@@ -34,10 +34,8 @@ bool MatrixFigure::update_queen() noexcept {
   return is_changed_for_white || is_changed_for_black;
 }
 
-void MatrixFigure::set_matrix(size_t height,
-                              size_t width,
-                              Figure figure) noexcept {
-  this->figures[height][width] = figure;
+Figure& MatrixFigure::get_figure(uint8_t height, uint8_t width) noexcept {
+  return this->figures[height][width];
 }
 
 void detail::InsertLayerForMatrixFigure(MatrixFigure& matrix,
