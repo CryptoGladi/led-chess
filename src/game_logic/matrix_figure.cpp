@@ -1,29 +1,29 @@
 #include "game_logic/matrix_figure.h"
 
 void MatrixFigure::print() noexcept {
-  Serial.println("matrix_figure::MatrixFigure::Print");
+  Log.infoln("matrix_figure::MatrixFigure::Print");
 
   for (int h = 0; h < detail::HEIGHT_MATRIX; h++) {
     for (int w = 0; w < detail::WIDTH_MATRIX; w++) {
       switch (this->figures[h][w].type) {
         case FWhite:
-          Serial.print("W");
+          Log.info("W");
           break;
         case FBlack:
-          Serial.print("B");
+          Log.info("B");
           break;
         case Empty:
-          Serial.print("E");
+          Log.info("E");
           break;
         case NotUsed:
-          Serial.print("N");
+          Log.info("N");
           break;
       }
 
-      Serial.print(this->figures[h][w].is_queen ? "! " : " ");
+      Log.info(this->figures[h][w].is_queen ? "! " : " ");
     }
 
-    Serial.println("");
+    Log.infoln("");
   }
 }
 

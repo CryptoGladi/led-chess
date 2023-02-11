@@ -19,21 +19,21 @@ StatusMove detail::ReturnErrorMove(TypeErrorForMove error,
 }
 
 void detail::PrintStatusMove(StatusMove status, bool is_successful) noexcept {
-  Serial.print("PrintStatusMove: ");
+  Log.info("PrintStatusMove: ");
 
   if (is_successful) {
-    Serial.print("Successful");
+    Log.info("Successful");
   } else {
-    Serial.print("Error = ");
+    Log.info("Error = ");
 
     if (status.error == FigureGoToNotUsed) {
-      Serial.print("FigureGoToNotUsed");
+      Log.info("FigureGoToNotUsed");
     } else if (status.error == FigureNotObeyThePlayer) {
-      Serial.print("FigureNotObeyThePlayer");
+      Log.info("FigureNotObeyThePlayer");
     }
   }
 
-  Serial.println("");
+  Log.infoln("");
 }
 
 StatusMove detail::MoveEngine::move() noexcept {
@@ -51,7 +51,7 @@ StatusMove detail::MoveEngine::move() noexcept {
       Figure{.type = Empty, .is_queen = false};
   this->matrix.get_figure(from_height, from_width) = new_figure;
 
-  Serial.println("Done detail::MoveEngine::move");
+  Log.infoln("Done detail::MoveEngine::move");
   bool found_new_queen = this->matrix.update_queen();
   return ReturnResultMove(ResultForMove{.found_new_queen = found_new_queen},
                           this->is_successful);
@@ -80,30 +80,38 @@ bool detail::MoveEngine::check_not_used_matrix() noexcept {
 bool detail::MoveEngine::check_possibility() noexcept {
   auto all_possible_moves = get_all_possible_moves();
 
-  //if (all_possible_moves.find(Coordinate {.height = 1, .width = 1}, [a, n]){
-  //  return true
-  //}) {
-  //}
+  auto index = all_possible_moves.find(
+      Coordinate{.height = from_height, .width = from_width},
+      [](Coordinate& a, Coordinate& b) -> bool {
+        return a.height == b.height && a.width == b.width;
+      });
 
-  return true;
+  return index != -1;
 }
 
 detail::coordinates_t detail::MoveEngine::get_all_possible_moves() noexcept {
   coordinates_t result;
+  auto currect_figure =
+      this->matrix.get_figure(this->to_height, this->to_width);
 
-  // TODO проверка на тип фигуры
-  get_possible_moves(+1, -1, result);
-  get_possible_moves(+1, +1, result);
-  get_possible_moves(-1, -1, result);
-  get_possible_moves(-1, +1, result);
+  if (currect_figure.is_queen || currect_figure.type == FWhite)
+    get_possible_moves(+1, -1, result);
+
+  if (currect_figure.is_queen || currect_figure.type == FWhite)
+    get_possible_moves(+1, +1, result);
+
+  if (currect_figure.is_queen || currect_figure.type == FBlack)
+    get_possible_moves(-1, -1, result);
+
+  if (currect_figure.is_queen || currect_figure.type == FBlack)
+    get_possible_moves(-1, +1, result);
 
   return result;
 }
 
-void detail::MoveEngine::get_possible_moves(
-    int16_t change_height,
-    int16_t change_width,
-    coordinates_t& moves) noexcept {
+void detail::MoveEngine::get_possible_moves(int16_t change_height,
+                                            int16_t change_width,
+                                            coordinates_t& moves) noexcept {
   Coordinate last_coordinate = {.height = this->to_height,
                                 .width = this->to_width};
   auto figure_for_check = matrix.get_figure(this->to_height, this->to_width);
@@ -113,7 +121,10 @@ void detail::MoveEngine::get_possible_moves(
   uint8_t i = 0;
   for (;;) {
     if (last_coordinate.height < abs(change_height) ||
-        last_coordinate.width < abs(change_width) || maximum_stroke_length == i)
+        last_coordinate.width < abs(change_width) ||
+        maximum_stroke_length == i ||
+        matrix.get_figure(last_coordinate.height, last_coordinate.width).type !=
+            Empty)
       break;
 
     uint8_t new_height = last_coordinate.height + change_height;

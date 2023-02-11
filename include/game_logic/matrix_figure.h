@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Arduino.h>
+#include <ArduinoLog.h>
 #include "detail.h"
 
 /// @brief Типы фигур в шашек

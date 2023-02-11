@@ -77,8 +77,8 @@ struct MoveEngine {
   coordinates_t get_all_possible_moves() noexcept;
 
   void get_possible_moves(int16_t change_height,
-                                   int16_t change_width,
-                                   coordinates_t& moves) noexcept;
+                          int16_t change_width,
+                          coordinates_t& moves) noexcept;
 
   MatrixFigure& matrix;
   uint8_t to_height;
