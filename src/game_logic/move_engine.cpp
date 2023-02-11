@@ -80,26 +80,30 @@ bool detail::MoveEngine::check_not_used_matrix() noexcept {
 bool detail::MoveEngine::check_possibility() noexcept {
   auto all_possible_moves = get_all_possible_moves();
 
-  // TODO проверка на тип фигуры
+  //if (all_possible_moves.find(Coordinate {.height = 1, .width = 1}, [a, n]){
+  //  return true
+  //}) {
+  //}
 
   return true;
 }
 
-detail::AllPossibleMoves detail::MoveEngine::get_all_possible_moves() noexcept {
-  AllPossibleMoves result;
+detail::coordinates_t detail::MoveEngine::get_all_possible_moves() noexcept {
+  coordinates_t result;
 
-  result.forward_left = get_possible_moves(+1, -1);
-  result.forward_right = get_possible_moves(+1, +1);
-  result.back_left = get_possible_moves(-1, -1);
-  result.back_right = get_possible_moves(-1, +1);
+  // TODO проверка на тип фигуры
+  get_possible_moves(+1, -1, result);
+  get_possible_moves(+1, +1, result);
+  get_possible_moves(-1, -1, result);
+  get_possible_moves(-1, +1, result);
 
   return result;
 }
 
-detail::coordinates_t detail::MoveEngine::get_possible_moves(
+void detail::MoveEngine::get_possible_moves(
     int16_t change_height,
-    int16_t change_width) noexcept {
-  detail::coordinates_t result;
+    int16_t change_width,
+    coordinates_t& moves) noexcept {
   Coordinate last_coordinate = {.height = this->to_height,
                                 .width = this->to_width};
   auto figure_for_check = matrix.get_figure(this->to_height, this->to_width);
@@ -117,9 +121,7 @@ detail::coordinates_t detail::MoveEngine::get_possible_moves(
     auto new_coordinate = Coordinate{.height = new_height, .width = new_width};
 
     last_coordinate = new_coordinate;
-    result.insertBack(&new_coordinate);
+    moves.insertBack(&new_coordinate);
     ++i;
   }
-
-  return result;
 }
