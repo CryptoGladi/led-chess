@@ -18,8 +18,10 @@ enum TypePlayer : uint8_t {
 struct Player {
   explicit Player(TypePlayer type) : type(type){};
 
+  /// @brief Изменить игрока на противоложный
   void change() noexcept;
 
+  /// @brief Cам тип игрока
   TypePlayer type;
 };
 
@@ -49,6 +51,9 @@ class GameLogic {
   Player get_who_make_next_move() noexcept;
 
  private:
+  /// @brief Матрица
   MatrixFigure matrix;
-  Player player = Player(TypePlayer::NWhite);
+
+  /// @brief Текущий игрок
+  Player currect_player = Player(TypePlayer::NWhite);
 };

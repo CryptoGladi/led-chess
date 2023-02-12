@@ -37,15 +37,28 @@ union StatusMove {
 };
 
 namespace detail {
+/// @brief Вернуть положительный результат
+/// @param result Сам ResultForMove
+/// @param is_successful Хуйня чтобы хранить конкретный тип для StatusMove
 StatusMove ReturnResultMove(ResultForMove result, bool& is_successful) noexcept;
 
+/// @brief Вернуть ошибку
+/// @param error Сам TypeErrorForMove
+/// @param is_successful Хуйня чтобы хранить конкретный тип для StatusMove
 StatusMove ReturnErrorMove(TypeErrorForMove error,
                            bool& is_successful) noexcept;
 
+/// @brief Напечатать в Serial StatusMove
+/// @param status_move Сам StatusMove
+/// @param is_successful Хуйня чтобы хранить конкретный тип для StatusMove
 void PrintStatusMove(StatusMove status_move, bool is_successful) noexcept;
 
+/// @brief Координаты в шашках
 struct Coordinate {
+  /// @brief Высота
   uint8_t height;
+
+  /// @brief Ширина
   uint8_t width;
 };
 
@@ -68,14 +81,19 @@ struct MoveEngine {
   StatusMove move() noexcept;
 
  private:
+  /// @brief Проверить на выход из границ шашек
   bool check_buffer_overflow() noexcept;
 
+  /// @brief Проверка на NotUsed
   bool check_not_used_matrix() noexcept;
 
+  /// @brief Проверка на возможность хода
   bool check_possibility() noexcept;
 
+  /// @brief Строит карту возможных перемещенний, но для всех возможных направлениях
   coordinates_t get_all_possible_moves() noexcept;
 
+  /// @brief Строит карту возможных перемещенний согласно переменным
   void get_possible_moves(int16_t change_height,
                           int16_t change_width,
                           coordinates_t& moves) noexcept;
