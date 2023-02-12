@@ -1,7 +1,6 @@
 #pragma once
 
 #include <Arduino.h>
-#include <ArduinoLog.h>
 #include "detail.h"
 
 /// @brief Типы фигур в шашек
@@ -20,6 +19,8 @@ enum TypeFigure : uint8_t {
 };
 
 struct Figure {
+  TypeFigure get_opposite() noexcept;
+
   /// @brief Тип нашей фигуры
   TypeFigure type;
 
