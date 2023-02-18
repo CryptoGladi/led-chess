@@ -1,15 +1,17 @@
 #include "game_logic/matrix_figure.h"
 
+using namespace utilities;
+
 TypeFigure Figure::get_opposite() noexcept {
-  switch (this->type)
+  switch(this->type)
   {
   case FWhite:
     return FBlack;
   case FBlack:
     return FWhite;
+  default:
+    return this->type;
   }
-
-  return this->type;
 }
 
 void MatrixFigure::print() noexcept {
@@ -19,23 +21,23 @@ void MatrixFigure::print() noexcept {
     for (int w = 0; w < detail::WIDTH_MATRIX; w++) {
       switch (this->figures[h][w].type) {
         case FWhite:
-          Serial.print("W");
+          ss << "W";
           break;
         case FBlack:
-          Serial.print("B");
+          ss << "B";
           break;
         case Empty:
-          Serial.print("E");
+          ss << "E";
           break;
         case NotUsed:
-          Serial.print("N");
+          ss << "N";
           break;
       }
 
-      Serial.print(this->figures[h][w].is_queen ? "! " : " ");
+      ss << (this->figures[h][w].is_queen ? "! " : " ");
     }
 
-    Serial.println("");
+    ss << ssEndl;
   }
 }
 

@@ -4,6 +4,7 @@
 #include <math.h>
 #include "macro.h"
 #include "matrix_figure.h"
+#include "global.h"
 
 /// @brief Тип ошибки при ходе
 enum TypeErrorForMove : uint8_t {

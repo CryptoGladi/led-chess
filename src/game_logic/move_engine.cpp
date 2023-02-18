@@ -1,5 +1,7 @@
 #include "game_logic/move_engine.h"
 
+using namespace utilities;
+
 StatusMove detail::ReturnResultMove(ResultForMove result,
                                     bool& is_successful) noexcept {
   is_successful = true;
@@ -19,33 +21,14 @@ StatusMove detail::ReturnErrorMove(TypeErrorForMove error,
 }
 
 void detail::PrintStatusMove(StatusMove status, bool is_successful) noexcept {
-  Serial.print("PrintStatusMove: ");
+  ss << "PrintStatusMove: ";
 
-  if (is_successful) {
-    Serial.print("Successful");
-  } else {
-    Serial.print("Error = ");
+  if (is_successful) 
+    ss << "Successful";
+  else
+    ss << "Error = " << status.error;
 
-    switch (status.error)
-    {
-    case FigureGoToNotUsed:
-      Serial.print("FigureGoToNotUsed");
-    case FigureNotObeyThePlayer:
-      Serial.print("FigureNotObeyThePlayer");
-    case BufferOverflow:
-      Serial.print("BufferOverflow");
-    case NoMovePossible:
-      Serial.print("NoMovePossible");
-    }
-
-    if (status.error == FigureGoToNotUsed) {
-      Serial.print("FigureGoToNotUsed");
-    } else if (status.error == FigureNotObeyThePlayer) {
-      Serial.print("FigureNotObeyThePlayer");
-    }
-  }
-
-  Serial.println("");
+  ss << ssEndl;
 }
 
 StatusMove detail::MoveEngine::move() noexcept {
@@ -63,7 +46,7 @@ StatusMove detail::MoveEngine::move() noexcept {
       Figure{.type = Empty, .is_queen = false};
   this->matrix.get_figure(from_height, from_width) = new_figure;
 
-  Serial.println("Done detail::MoveEngine::move");
+  ss << "Done detail::MoveEngine::move" << ssEndl;
   bool found_new_queen = this->matrix.update_queen();
   return ReturnResultMove(ResultForMove{.found_new_queen = found_new_queen},
                           this->is_successful);
@@ -92,7 +75,7 @@ bool detail::MoveEngine::check_not_used_matrix() noexcept {
 bool detail::MoveEngine::check_possibility() noexcept {
   auto all_possible_moves = get_all_possible_moves();
 
-  Serial.println(all_possible_moves.size());
+  ss << all_possible_moves.size() << ssEndl;
 
   auto index = all_possible_moves.find(
       Coordinate{.height = from_height, .width = from_width},
@@ -120,7 +103,7 @@ detail::coordinates_t detail::MoveEngine::get_all_possible_moves() noexcept {
   if (currect_figure.is_queen || currect_figure.type == FWhite)
     get_possible_moves(-1, +1, result);
 
-  Serial.println(result.size());
+  ss << result.size() << ssEndl;
 
   return result;
 }
@@ -150,6 +133,9 @@ void detail::MoveEngine::get_possible_moves(int16_t change_height,
     auto new_coordinate = Coordinate{.height = new_height, .width = new_width};
 
     last_coordinate = new_coordinate;
+    
+    ss << "new coordinate: height=" << new_height << "; width=" << new_width << ";" << ssEndl; 
+
     moves.insertBack(&new_coordinate);
     ++i;
   }

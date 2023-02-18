@@ -2,6 +2,7 @@
 
 #include <Arduino.h>
 #include "detail.h"
+#include "global.h"
 
 /// @brief Типы фигур в шашек
 enum TypeFigure : uint8_t {

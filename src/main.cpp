@@ -1,9 +1,9 @@
 #include <Arduino.h>
+#include <SmartSerial.hpp>
 #include "game_logic/game_logic.h"
 
 void setup() {
   Serial.begin(921600);
-  //Log.begin(LOG_LEVEL_TRACE, &Serial);
 }
 
 void loop() {
