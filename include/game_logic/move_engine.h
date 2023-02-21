@@ -10,16 +10,16 @@
 enum TypeErrorForMove : uint8_t {
   /// @brief Фигура не подчиниется игроку. Значит сейчас ходит другой игрок!
   /// @warning Реализация этой ошибки только в game_logic.cpp
-  FigureNotObeyThePlayer,
+  FigureNotObeyThePlayer = 0,
 
   /// @brief Фигура захотела пойти в неиспользуемую клетку
-  FigureGoToNotUsed,
+  FigureGoToNotUsed = 1,
 
   /// @brief Вы выходите за границы!
-  BufferOverflow,
+  BufferOverflow = 2,
 
   /// @brief Ход невозможен
-  NoMovePossible
+  NoMovePossible = 3,
 };
 
 /// @brief Результат (всё успешно) при ходе

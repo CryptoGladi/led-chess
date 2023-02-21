@@ -75,7 +75,7 @@ bool detail::MoveEngine::check_not_used_matrix() noexcept {
 bool detail::MoveEngine::check_possibility() noexcept {
   auto all_possible_moves = get_all_possible_moves();
 
-  ss << all_possible_moves.size() << ssEndl;
+  ss << "all_possible_moves.size() = " << all_possible_moves.size() << ssEndl;
 
   auto index = all_possible_moves.find(
       Coordinate{.height = from_height, .width = from_width},
@@ -103,8 +103,6 @@ detail::coordinates_t detail::MoveEngine::get_all_possible_moves() noexcept {
   if (currect_figure.is_queen || currect_figure.type == FWhite)
     get_possible_moves(-1, +1, result);
 
-  ss << result.size() << ssEndl;
-
   return result;
 }
 
@@ -117,16 +115,27 @@ void detail::MoveEngine::get_possible_moves(int16_t change_height,
   uint8_t maximum_stroke_length =
       figure_for_check.is_queen ? macro::MAX(HEIGHT_MATRIX, WIDTH_MATRIX) : 1;
 
-  // TODO баг
-
   uint8_t i = 0;
   for (;;) {
     if (last_coordinate.height < abs(change_height) ||
         last_coordinate.width < abs(change_width) ||
         maximum_stroke_length == i ||
         matrix.get_figure(last_coordinate.height, last_coordinate.width).get_opposite() ==
-            matrix.get_figure(last_coordinate.height, last_coordinate.width).type)
-      break;
+            matrix.get_figure(last_coordinate.height, last_coordinate.width).type) {
+              ss << "done break!" << ssEndl; // TODO Тут срабатывает какоё-то ложное условние!
+              ss << "last_coordinate.height < abs(change_height) = " << (last_coordinate.height < abs(change_height)) << ssEndl;
+              ss << "last_coordinate.width < abs(change_width) = " << (last_coordinate.width < abs(change_width)) << ssEndl;
+              ss << "maximum_stroke_length == i = " << (maximum_stroke_length == i) << ssEndl;
+              ss << "matrix.get_figure(last_coordinate.height, last_coordinate.width).get_opposite() == matrix.get_figure(last_coordinate.height, last_coordinate.width).type = " << (matrix.get_figure(last_coordinate.height, last_coordinate.width).get_opposite() == matrix.get_figure(last_coordinate.height, last_coordinate.width).type) << ssEndl;
+
+              ss << "info:" << ssEndl;
+              ss << "change_height = " << change_height << ssEndl;
+              ss << "change_width = " << change_width << ssEndl;
+              ss << "last_coordinate.height = " << last_coordinate.height << ssEndl;
+              ss << "last_coordinate.width = " << last_coordinate.width << ssEndl;
+
+              break;
+    }
 
     uint8_t new_height = last_coordinate.height + change_height;
     uint8_t new_width = last_coordinate.width + change_width;
@@ -140,5 +149,5 @@ void detail::MoveEngine::get_possible_moves(int16_t change_height,
     ++i;
   }
 
-  Serial.println(moves.size());
+  ss << "moves for one = " << moves.size() << ssEndl;
 }

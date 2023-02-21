@@ -3,7 +3,7 @@
 #include "game_logic/game_logic.h"
 
 void setup() {
-  Serial.begin(921600);
+  Serial.begin(HUZZAH_MONITOR_SPEED);
 }
 
 void loop() {

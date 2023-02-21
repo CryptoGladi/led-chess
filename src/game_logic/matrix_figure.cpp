@@ -15,7 +15,7 @@ TypeFigure Figure::get_opposite() noexcept {
 }
 
 void MatrixFigure::print() noexcept {
-  Serial.println("matrix_figure::MatrixFigure::Print");
+  ss << "matrix_figure::MatrixFigure::Print" << ssEndl;
 
   for (int h = 0; h < detail::HEIGHT_MATRIX; h++) {
     for (int w = 0; w < detail::WIDTH_MATRIX; w++) {
