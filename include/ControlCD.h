@@ -8,6 +8,5 @@ public:
   void initializingCDcard(uint8_t pin);
 private:
   File myFile;
-  void CDConfig(bool* status);
   String nameFile;
 };
