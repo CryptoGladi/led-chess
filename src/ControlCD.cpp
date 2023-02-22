@@ -4,7 +4,6 @@
 #include "Configuration.h"
 
 
-
 CCD::CCD(String name) {  //конструктор класса
   nameFile = name;
 }
