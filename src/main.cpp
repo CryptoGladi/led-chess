@@ -13,7 +13,7 @@ void loop() {
 
   game_logic.get_matrix().print();
 
-  bool is_successful = false;
+  bool is_successful = false; // -1 +1
   auto status = game_logic.move(5, 0, 4, 1, is_successful);
 
   detail::PrintStatusMove(status, is_successful);

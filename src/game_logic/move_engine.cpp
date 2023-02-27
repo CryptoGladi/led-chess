@@ -23,7 +23,7 @@ StatusMove detail::ReturnErrorMove(TypeErrorForMove error,
 void detail::PrintStatusMove(StatusMove status, bool is_successful) noexcept {
   ss << "PrintStatusMove: ";
 
-  if (is_successful) 
+  if (is_successful)
     ss << "Successful";
   else
     ss << "Error = " << status.error;
@@ -91,14 +91,14 @@ detail::coordinates_t detail::MoveEngine::get_all_possible_moves() noexcept {
   auto currect_figure =
       this->matrix.get_figure(this->to_height, this->to_width);
 
-  if (currect_figure.is_queen || currect_figure.type == FBlack)
-    get_possible_moves(+1, -1, result);
+  //if (currect_figure.is_queen || currect_figure.type == FBlack)
+  //  get_possible_moves(+1, -1, result);
 
-  if (currect_figure.is_queen || currect_figure.type == FBlack)
-    get_possible_moves(+1, +1, result);
+  //if (currect_figure.is_queen || currect_figure.type == FBlack)
+  //  get_possible_moves(+1, +1, result);
 
-  if (currect_figure.is_queen || currect_figure.type == FWhite)
-    get_possible_moves(-1, -1, result);
+  //if (currect_figure.is_queen || currect_figure.type == FWhite)
+  //  get_possible_moves(-1, -1, result);
 
   if (currect_figure.is_queen || currect_figure.type == FWhite)
     get_possible_moves(-1, +1, result);
@@ -117,24 +117,21 @@ void detail::MoveEngine::get_possible_moves(int16_t change_height,
 
   uint8_t i = 0;
   for (;;) {
-    if (last_coordinate.height < abs(change_height) ||
-        last_coordinate.width < abs(change_width) ||
-        maximum_stroke_length == i ||
-        matrix.get_figure(last_coordinate.height, last_coordinate.width).get_opposite() ==
-            matrix.get_figure(last_coordinate.height, last_coordinate.width).type) {
-              ss << "done break!" << ssEndl; // TODO Тут срабатывает какоё-то ложное условние!
-              ss << "last_coordinate.height < abs(change_height) = " << (last_coordinate.height < abs(change_height)) << ssEndl;
-              ss << "last_coordinate.width < abs(change_width) = " << (last_coordinate.width < abs(change_width)) << ssEndl;
-              ss << "maximum_stroke_length == i = " << (maximum_stroke_length == i) << ssEndl;
-              ss << "matrix.get_figure(last_coordinate.height, last_coordinate.width).get_opposite() == matrix.get_figure(last_coordinate.height, last_coordinate.width).type = " << (matrix.get_figure(last_coordinate.height, last_coordinate.width).get_opposite() == matrix.get_figure(last_coordinate.height, last_coordinate.width).type) << ssEndl;
+    if ((last_coordinate.height == -1 ||
+         last_coordinate.height == HEIGHT_MATRIX + 1) ||
+        (last_coordinate.width == -1 || last_coordinate.width == WIDTH_MATRIX + 1)) {
+      // TODO Переработать условия колизии! (неверно last_coordinate.width <
+      // abs(change_width))
 
-              ss << "info:" << ssEndl;
-              ss << "change_height = " << change_height << ssEndl;
-              ss << "change_width = " << change_width << ssEndl;
-              ss << "last_coordinate.height = " << last_coordinate.height << ssEndl;
-              ss << "last_coordinate.width = " << last_coordinate.width << ssEndl;
+      ss << "done break!" << ssEndl;
 
-              break;
+      ss << "info:" << ssEndl;
+      ss << "change_height = " << change_height << ssEndl;
+      ss << "change_width = " << change_width << ssEndl;
+      ss << "last_coordinate.height = " << last_coordinate.height << ssEndl;
+      ss << "last_coordinate.width = " << last_coordinate.width << ssEndl;
+
+      break;
     }
 
     uint8_t new_height = last_coordinate.height + change_height;
@@ -142,8 +139,9 @@ void detail::MoveEngine::get_possible_moves(int16_t change_height,
     auto new_coordinate = Coordinate{.height = new_height, .width = new_width};
 
     last_coordinate = new_coordinate;
-    
-    ss << "new coordinate: height=" << new_height << "; width=" << new_width << ";" << ssEndl; 
+
+    ss << "new coordinate: height=" << new_height << "; width=" << new_width
+       << ";" << ssEndl;
 
     moves.insertBack(&new_coordinate);
     ++i;

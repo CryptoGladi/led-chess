@@ -2,9 +2,9 @@
 
 #include <List.h>
 #include <math.h>
+#include "global.h"
 #include "macro.h"
 #include "matrix_figure.h"
-#include "global.h"
 
 /// @brief Тип ошибки при ходе
 enum TypeErrorForMove : uint8_t {
@@ -91,7 +91,8 @@ struct MoveEngine {
   /// @brief Проверка на возможность хода
   bool check_possibility() noexcept;
 
-  /// @brief Строит карту возможных перемещенний, но для всех возможных направлениях
+  /// @brief Строит карту возможных перемещенний, но для всех возможных
+  /// направлениях
   coordinates_t get_all_possible_moves() noexcept;
 
   /// @brief Строит карту возможных перемещенний согласно переменным

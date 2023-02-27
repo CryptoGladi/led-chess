@@ -3,14 +3,13 @@
 using namespace utilities;
 
 TypeFigure Figure::get_opposite() noexcept {
-  switch(this->type)
-  {
-  case FWhite:
-    return FBlack;
-  case FBlack:
-    return FWhite;
-  default:
-    return this->type;
+  switch (this->type) {
+    case FWhite:
+      return FBlack;
+    case FBlack:
+      return FWhite;
+    default:
+      return this->type;
   }
 }
 
