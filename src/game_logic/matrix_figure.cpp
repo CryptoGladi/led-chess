@@ -7,20 +7,19 @@ void matrix_figure::MatrixFigure::Print() noexcept {
 
   for (int h = 0; h < HEIGHT_MATRIX; h++) {
     for (int w = 0; h < WIDTH_MATRIX; h++) {
-      switch (this->figures[h][w])
-      {
-      case White:
-        Serial.print("W");
-        break;
-      case Black:
-        Serial.print("B");
-        break;
-      case Empty:
-        Serial.print("E");
-        break;
-      case NotUsed:
-      Serial.print("N");
-      break;
+      switch (this->figures[h][w]) {
+        case White:
+          Serial.print("W");
+          break;
+        case Black:
+          Serial.print("B");
+          break;
+        case Empty:
+          Serial.print("E");
+          break;
+        case NotUsed:
+          Serial.print("N");
+          break;
       }
     }
 

@@ -1,23 +1,23 @@
 #pragma once
 
-#include <SPI.h>
 #include <SD.h>
+#include <SPI.h>
 
-struct SDCard
-{
-    SDCard(uint8_t cs_pin) noexcept : cs_pin(cs_pin) {
-        SD.begin(this->cs_pin);
-    };
-    
-    bool read_file(const String &filename, String& buffer) noexcept;
+struct SDCard {
+  explicit SDCard(uint8_t cs_pin) noexcept;
 
-    bool overwrite_file(const String &filename, const String &data) noexcept;
+  bool read_file(const String& filename, String& buffer) noexcept;
 
-    bool file_is_opened() noexcept;
+  bool overwrite_file(const String& filename, const String& data) noexcept;
 
-private:
-    bool open_file(const String &filename, uint8_t mode=O_READ) noexcept;
+  bool file_is_opened() noexcept;
 
-    File file;
-    uint8_t cs_pin;
+  bool raw_open_file(const String& filename, uint8_t mode = O_READ) noexcept;
+
+  bool raw_close_file() noexcept;
+
+  File& get_raw_file() noexcept;
+
+ private:
+  File _file;
 };
