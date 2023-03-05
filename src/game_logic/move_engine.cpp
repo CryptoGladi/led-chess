@@ -33,13 +33,17 @@ void detail::PrintStatusMove(StatusMove status, bool is_successful) noexcept {
 
 StatusMove detail::MoveEngine::move() noexcept {
   if (!check_buffer_overflow())
-    return ReturnErrorMove(BufferOverflow, this->is_successful);
+    return ReturnErrorMove(TypeErrorForMove::BufferOverflow, this->is_successful);
 
   if (!check_not_used_matrix())
-    return ReturnErrorMove(FigureGoToNotUsed, this->is_successful);
+    return ReturnErrorMove(TypeErrorForMove::FigureGoToNotUsed, this->is_successful);
 
-  if (!check_possibility())
-    return ReturnErrorMove(NoMovePossible, this->is_successful);
+  ss << "!check_possibility() 0" << ssEndl;
+  if (!check_possibility()) {
+    ss << "!check_possibility()" << ssEndl;
+    return ReturnErrorMove(TypeErrorForMove::NoMovePossible, this->is_successful);
+  }
+  ss << "!check_possibility() 1" << ssEndl;
 
   auto new_figure = this->matrix.get_figure(to_height, to_width);
   this->matrix.get_figure(to_height, to_width) =
@@ -83,6 +87,10 @@ bool detail::MoveEngine::check_possibility() noexcept {
         return a.height == b.height && a.width == b.width;
       });
 
+  ss << "all_possible_moves.clearList(true) 0" << ssEndl;
+  all_possible_moves.clearList(true);
+  ss << "all_possible_moves.clearList(true) 1" << ssEndl;
+  ss << "2: " << !(index == -1) << ssEndl;
   return !(index == -1);
 }
 
@@ -103,6 +111,7 @@ detail::coordinates_t detail::MoveEngine::get_all_possible_moves() noexcept {
   if (currect_figure.is_queen || currect_figure.type == FWhite)
     get_possible_moves(-1, +1, result);
 
+  ss << "1" << ssEndl;
   return result;
 }
 
@@ -117,9 +126,12 @@ void detail::MoveEngine::get_possible_moves(int16_t change_height,
 
   uint8_t i = 0;
   for (;;) {
-    if ((last_coordinate.height == -1 ||
-         last_coordinate.height == HEIGHT_MATRIX + 1) ||
-        (last_coordinate.width == -1 || last_coordinate.width == WIDTH_MATRIX + 1)) {
+    uint8_t new_height = last_coordinate.height + change_height;
+    uint8_t new_width = last_coordinate.width + change_width;
+
+      if ((new_height == 255 ||
+         new_height == HEIGHT_MATRIX + 1) ||
+        (new_width == UINT8_MAX || new_width == WIDTH_MATRIX + 1)) {
       // TODO Переработать условия колизии! (неверно last_coordinate.width <
       // abs(change_width))
 
@@ -134,8 +146,6 @@ void detail::MoveEngine::get_possible_moves(int16_t change_height,
       break;
     }
 
-    uint8_t new_height = last_coordinate.height + change_height;
-    uint8_t new_width = last_coordinate.width + change_width;
     auto new_coordinate = Coordinate{.height = new_height, .width = new_width};
 
     last_coordinate = new_coordinate;
