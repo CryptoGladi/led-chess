@@ -93,7 +93,7 @@ struct MoveEngine {
 
   /// @brief Строит карту возможных перемещенний, но для всех возможных
   /// направлениях
-  coordinates_t get_all_possible_moves() noexcept;
+  void get_all_possible_moves(coordinates_t& all_possible_moves) noexcept;
 
   /// @brief Строит карту возможных перемещенний согласно переменным
   void get_possible_moves(int16_t change_height,

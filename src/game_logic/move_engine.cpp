@@ -77,7 +77,15 @@ bool detail::MoveEngine::check_not_used_matrix() noexcept {
 }
 
 bool detail::MoveEngine::check_possibility() noexcept {
-  auto all_possible_moves = get_all_possible_moves();
+  coordinates_t all_possible_moves;
+  ss << "all_possible_moves.clearList(true) 00" << ssEndl;
+  all_possible_moves.clearList(true);
+  ss << "all_possible_moves.clearList(true) 10" << ssEndl;
+  get_all_possible_moves(all_possible_moves);
+
+  ss << "all_possible_moves.clearList(true) 000" << ssEndl;
+  all_possible_moves.clearList(true);
+  ss << "all_possible_moves.clearList(true) 100" << ssEndl;
 
   ss << "all_possible_moves.size() = " << all_possible_moves.size() << ssEndl;
 
@@ -94,8 +102,7 @@ bool detail::MoveEngine::check_possibility() noexcept {
   return !(index == -1);
 }
 
-detail::coordinates_t detail::MoveEngine::get_all_possible_moves() noexcept {
-  coordinates_t result;
+void detail::MoveEngine::get_all_possible_moves(coordinates_t& all_possible_moves) noexcept {
   auto currect_figure =
       this->matrix.get_figure(this->to_height, this->to_width);
 
@@ -109,10 +116,9 @@ detail::coordinates_t detail::MoveEngine::get_all_possible_moves() noexcept {
   //  get_possible_moves(-1, -1, result);
 
   if (currect_figure.is_queen || currect_figure.type == FWhite)
-    get_possible_moves(-1, +1, result);
+    get_possible_moves(-1, +1, all_possible_moves);
 
   ss << "1" << ssEndl;
-  return result;
 }
 
 void detail::MoveEngine::get_possible_moves(int16_t change_height,
@@ -153,6 +159,7 @@ void detail::MoveEngine::get_possible_moves(int16_t change_height,
     ss << "new coordinate: height=" << new_height << "; width=" << new_width
        << ";" << ssEndl;
 
+    // BUG была уничтожена! new_coordinate. Поэтому и ошибка!
     moves.insertBack(&new_coordinate);
     ++i;
   }
