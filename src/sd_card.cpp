@@ -6,11 +6,11 @@ SDCard::SDCard(uint8_t cs_pin) noexcept {
 
 bool SDCard::raw_open_file(const String& filename, uint8_t mode) noexcept {
   this->_file = SD.open(filename, mode);
-  return this->file_is_opened();
+  return this->raw_file_is_opened();
 }
 
 bool SDCard::raw_close_file() noexcept {
-  if (!this->file_is_opened())
+  if (!this->raw_file_is_opened())
     return false;
 
   this->_file.close();
@@ -21,7 +21,7 @@ bool SDCard::read_file(const String& filename, String& buffer) noexcept {
   if (!this->raw_open_file(filename, O_READ))
     return false;
 
-  if (!this->file_is_opened())
+  if (!this->raw_file_is_opened())
     return false;
 
   buffer = String(this->_file.read());
@@ -41,7 +41,7 @@ bool SDCard::overwrite_file(const String& filename,
   return true;
 }
 
-bool SDCard::file_is_opened() noexcept {
+bool SDCard::raw_file_is_opened() noexcept {
   return (this->_file && this->_file.available());
 }
 
