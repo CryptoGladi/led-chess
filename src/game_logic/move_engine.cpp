@@ -78,25 +78,27 @@ bool detail::MoveEngine::check_not_used_matrix() noexcept {
 
 bool detail::MoveEngine::check_possibility() noexcept {
   coordinates_t all_possible_moves;
+  Coordinate data_for_all_possible_moves[HEIGHT_MATRIX * WIDTH_MATRIX];
+
   ss << "all_possible_moves.clearList(true) 00" << ssEndl;
-  all_possible_moves.clearList(true);
+  all_possible_moves.nodes.clearList(true);
   ss << "all_possible_moves.clearList(true) 10" << ssEndl;
   get_all_possible_moves(all_possible_moves);
 
   ss << "all_possible_moves.clearList(true) 000" << ssEndl;
-  all_possible_moves.clearList(true);
+  all_possible_moves.nodes.clearList(true);
   ss << "all_possible_moves.clearList(true) 100" << ssEndl;
 
-  ss << "all_possible_moves.size() = " << all_possible_moves.size() << ssEndl;
+  ss << "all_possible_moves.size() = " << all_possible_moves.nodes.size() << ssEndl;
 
-  auto index = all_possible_moves.find(
+  auto index = all_possible_moves.nodes.find(
       Coordinate{.height = from_height, .width = from_width},
       [](Coordinate& a, Coordinate& b) -> bool {
         return a.height == b.height && a.width == b.width;
       });
 
   ss << "all_possible_moves.clearList(true) 0" << ssEndl;
-  all_possible_moves.clearList(true);
+  all_possible_moves.nodes.clearList(true);
   ss << "all_possible_moves.clearList(true) 1" << ssEndl;
   ss << "2: " << !(index == -1) << ssEndl;
   return !(index == -1);
@@ -160,9 +162,9 @@ void detail::MoveEngine::get_possible_moves(int16_t change_height,
        << ";" << ssEndl;
 
     // BUG была уничтожена! new_coordinate. Поэтому и ошибка!
-    moves.insertBack(&new_coordinate);
+    moves.push(new_coordinate);
     ++i;
   }
 
-  ss << "moves for one = " << moves.size() << ssEndl;
+  ss << "moves for one = " << moves.nodes.size() << ssEndl;
 }

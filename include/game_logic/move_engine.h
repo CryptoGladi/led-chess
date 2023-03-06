@@ -63,7 +63,7 @@ struct Coordinate {
   uint8_t width;
 };
 
-using coordinates_t = list<Coordinate>;
+using coordinates_t = macro::ListWithArray<Coordinate, HEIGHT_MATRIX * WIDTH_MATRIX>;
 
 struct MoveEngine {
   MoveEngine(MatrixFigure& matrix,
