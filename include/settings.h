@@ -44,12 +44,11 @@ struct SettingsManager {
   /// @brief Сохранить настройки
   /// @param data Наши новые настройки
   /// @return true - всё успешно
-  bool serialize(SettingsData data) noexcept;
+  void serialize(SettingsData data) noexcept;
 
   /// @brief Загрузить настройки
-  /// @param status Всё успешно?
   /// @return Настройки
-  SettingsData deserialize(bool& status) noexcept;
+  SettingsData deserialize() noexcept;
 
  private:
   SDCard& _storage;

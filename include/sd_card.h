@@ -11,16 +11,15 @@ struct SDCard {
   /// @brief Прочитать файл
   /// @param filename Имя файла
   /// @param buffer Куда сохранить текст из файла
-  /// @return true - если успешно
   /// @warning Автомотически открывает файл и закрывает его
-  bool read_file(const String& filename, String& buffer) noexcept;
+  void read_file(const String& filename, String& buffer) noexcept;
 
   /// @brief Переписать файл
   /// @param filename Имя файла
   /// @param data Информацию которую нужно записать в файл
   /// @return true - если успешно
   /// @warning Автомотически открывает файл и закрывает его
-  bool overwrite_file(const String& filename, const String& data) noexcept;
+  void overwrite_file(const String& filename, const String& data) noexcept;
 
   /// @brief Файл открыт?
   /// @warning Лучше использовать эти методы overwrite_file и read_file
@@ -31,12 +30,12 @@ struct SDCard {
   /// @param mode Его режим (чтение или запись)
   /// @return true - если успешно
   /// @warning Лучше использовать эти методы overwrite_file и read_file
-  bool raw_open_file(const String& filename, uint8_t mode = O_READ) noexcept;
+  void raw_open_file(const String& filename, uint8_t mode = O_READ) noexcept;
 
   /// @brief Закрыть файл
   /// @return true - если успешно
   /// @warning Лучше использовать эти методы overwrite_file и read_file
-  bool raw_close_file() noexcept;
+  void raw_close_file() noexcept;
 
   /// @brief Получить ссылку на File
   /// @warning Лучше использовать эти методы overwrite_file и read_file

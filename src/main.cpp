@@ -25,9 +25,7 @@ void loop() {
 
   settings_manager.serialize(data_for_save);
 
-  bool status;
-  auto settings_from_sdcard = settings_manager.deserialize(status);
+  auto settings_from_sdcard = settings_manager.deserialize();
 
   Serial.println(settings_from_sdcard.raw_password);
-  Serial.println(status);
 }

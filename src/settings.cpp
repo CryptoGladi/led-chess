@@ -16,17 +16,15 @@ DynamicJsonDocument SettingsData::get_dynamic_json_document() noexcept {
   return doc;
 }
 
-bool SettingsManager::serialize(SettingsData data) noexcept {
+void SettingsManager::serialize(SettingsData data) noexcept {
   auto doc = data.get_dynamic_json_document();
 
   this->_storage.raw_open_file(this->_filename_for_settings, O_WRITE);
   serializeJsonPretty(doc, this->_storage.get_raw_file());
   this->_storage.raw_close_file();
-
-  return true;
 }
 
-SettingsData SettingsManager::deserialize(bool& status) noexcept {
+SettingsData SettingsManager::deserialize() noexcept {
   DynamicJsonDocument doc(SETTINGS_MAX_MEMORY_ALLOCATION);
 
   this->_storage.raw_open_file(this->_filename_for_settings, O_READ);
