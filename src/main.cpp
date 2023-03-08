@@ -7,7 +7,7 @@ void setup() {
 
 void loop() {
   // TEST SDCARD
-  auto sdcard = SDCard(23);
+  auto sdcard = SDCard(4);
   sdcard.overwrite_file("test.txt", "test information");
 
   String buffer;

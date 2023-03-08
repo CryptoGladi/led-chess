@@ -1,13 +1,13 @@
 #include "sd_card.h"
 
 SDCard::SDCard(uint8_t cs_pin) noexcept {
-  SD.begin(cs_pin);
+  assert(SD.begin(cs_pin));
 }
 
 void SDCard::raw_open_file(const String& filename, uint8_t mode) noexcept {
   if (!this->raw_file_is_opened()) {
     this->_file = SD.open(filename, mode);
-    assert(this->_file && "error open file");
+    assert(this->_file);
   }
 }
 
