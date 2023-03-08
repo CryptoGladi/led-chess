@@ -7,8 +7,7 @@ SDCard::SDCard(uint8_t cs_pin) noexcept {
 void SDCard::raw_open_file(const String& filename, uint8_t mode) noexcept {
   if (!this->raw_file_is_opened()) {
     this->_file = SD.open(filename, mode);
-    bool status = this->raw_file_is_opened();
-    assert(status);
+    assert(this->_file && "error open file");
   }
 }
 
@@ -30,13 +29,13 @@ void SDCard::overwrite_file(const String& filename,
   this->raw_close_file();
   SD.remove(filename);
 
-  this->raw_open_file(filename, O_WRITE);
+  this->raw_open_file(filename, FILE_WRITE);
   this->_file.println(data);
   this->raw_close_file();
 }
 
 bool SDCard::raw_file_is_opened() noexcept {
-  return (this->_file && this->_file.available());
+  return this->_file;
 }
 
 File& SDCard::get_raw_file() noexcept {
