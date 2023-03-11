@@ -13,14 +13,17 @@ void SDCard::raw_open_file(const String& filename, oflag_t mode) noexcept {
 
 void SDCard::raw_close_file() noexcept {
   if (this->raw_file_is_opened())
-    this->_file.close();
+    assert(this->_file.close());
 }
 
 void SDCard::read_file(const String& filename, String& buffer) noexcept {
   if (!this->raw_file_is_opened())
     this->raw_open_file(filename);
 
-  buffer = String(this->_file.read());
+  auto result = this->_file.read();
+  assert(result != -1);
+
+  buffer = String(result);
 
   this->raw_close_file();
 }
@@ -28,7 +31,7 @@ void SDCard::read_file(const String& filename, String& buffer) noexcept {
 void SDCard::overwrite_file(const String& filename,
                             const String& data) noexcept {
   this->raw_close_file();
-  this->_sd.remove(filename);
+  assert(this->_sd.remove(filename));
 
   this->raw_open_file(filename);
   this->_file.println(data);
