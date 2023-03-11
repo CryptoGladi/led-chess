@@ -1,12 +1,12 @@
 #include "sd_card.h"
 
-SDCard::SDCard(uint8_t cs_pin) noexcept {
-  assert(SD.begin(cs_pin));
+SDCard::SDCard(SdCsPin_t cs_pin) noexcept {
+  assert(this->_sd.begin(cs_pin));
 }
 
-void SDCard::raw_open_file(const String& filename, uint8_t mode) noexcept {
+void SDCard::raw_open_file(const String& filename, oflag_t mode) noexcept {
   if (!this->raw_file_is_opened()) {
-    this->_file = SD.open(filename, mode);
+    this->_file = _sd.open(filename, mode);
     assert(this->_file);
   }
 }
@@ -17,7 +17,8 @@ void SDCard::raw_close_file() noexcept {
 }
 
 void SDCard::read_file(const String& filename, String& buffer) noexcept {
-  this->raw_open_file(filename, O_READ);
+  if (!this->raw_file_is_opened())
+    this->raw_open_file(filename);
 
   buffer = String(this->_file.read());
 
@@ -27,9 +28,9 @@ void SDCard::read_file(const String& filename, String& buffer) noexcept {
 void SDCard::overwrite_file(const String& filename,
                             const String& data) noexcept {
   this->raw_close_file();
-  SD.remove(filename);
+  this->_sd.remove(filename);
 
-  this->raw_open_file(filename, FILE_WRITE);
+  this->raw_open_file(filename);
   this->_file.println(data);
   this->raw_close_file();
 }
@@ -38,6 +39,6 @@ bool SDCard::raw_file_is_opened() noexcept {
   return this->_file;
 }
 
-File& SDCard::get_raw_file() noexcept {
+File32& SDCard::get_raw_file() noexcept {
   return this->_file;
 }

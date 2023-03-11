@@ -1,12 +1,12 @@
 #pragma once
 
-#include <SD.h>
+#include <SdFat.h>
 #include <SPI.h>
 
 struct SDCard {
   /// @brief Инцилизация
   /// @param cs_pin Пин для работы с sd картой
-  explicit SDCard(uint8_t cs_pin) noexcept;
+  explicit SDCard(SdCsPin_t cs_pin) noexcept;
 
   /// @brief Прочитать файл
   /// @param filename Имя файла
@@ -30,7 +30,7 @@ struct SDCard {
   /// @param mode Его режим (чтение или запись)
   /// @return true - если успешно
   /// @warning Лучше использовать эти методы overwrite_file и read_file
-  void raw_open_file(const String& filename, uint8_t mode = O_READ) noexcept;
+  void raw_open_file(const String& filename, oflag_t mode = O_RDWR | O_CREAT) noexcept;
 
   /// @brief Закрыть файл
   /// @return true - если успешно
@@ -39,8 +39,9 @@ struct SDCard {
 
   /// @brief Получить ссылку на File
   /// @warning Лучше использовать эти методы overwrite_file и read_file
-  File& get_raw_file() noexcept;
+  File32& get_raw_file() noexcept;
 
  private:
-  File _file;
+  File32 _file;
+  SdFat _sd;
 };
