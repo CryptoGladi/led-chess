@@ -17,20 +17,21 @@ void loop() {
 
   Serial.println(buffer);
   Serial.println(buffer == "test information");
+  Serial.println(buffer.length());
   Serial.println("TEST SDCARD END");
 
   // TEST SETTINGS
-  Serial.println("TEST SETTINGS START");
-  auto settings_manager = SettingsManager(sdcard);
-  SettingsData data_for_save;
-  data_for_save.raw_password = "test_password";
-  data_for_save.ssid_wifi = "kvantwifi";
-  data_for_save.timeout_sleep = 42;
+  //Serial.println("TEST SETTINGS START");
+  //auto settings_manager = SettingsManager(sdcard);
+  //SettingsData data_for_save;
+  //data_for_save.raw_password = "test_password";
+  //data_for_save.ssid_wifi = "kvantwifi";
+  //data_for_save.timeout_sleep = 42;
 
-  settings_manager.serialize(data_for_save);
+  //settings_manager.serialize(data_for_save);
 
-  auto settings_from_sdcard = settings_manager.deserialize();
+  //auto settings_from_sdcard = settings_manager.deserialize();
 
-  Serial.println(settings_from_sdcard.raw_password);
-  Serial.println("TEST SETTINGS ND");
+  //Serial.println(settings_from_sdcard.raw_password);
+  //Serial.println("TEST SETTINGS ND");
 }

@@ -20,21 +20,28 @@ void SDCard::read_file(const String& filename, String& buffer) noexcept {
   if (!this->raw_file_is_opened())
     this->raw_open_file(filename);
 
-  auto result = this->_file.read();
-  assert(result != -1);
+  
+  for (;;) {
+    auto result = this->_file.read();
 
-  buffer = String(result);
+    if (result == -1) {
+      break;
+    }
 
+    buffer += String(static_cast<char>(result));
+  }
+
+  buffer.trim();
   this->raw_close_file();
 }
 
 void SDCard::overwrite_file(const String& filename,
                             const String& data) noexcept {
   this->raw_close_file();
-  assert(this->_sd.remove(filename));
+  this->_sd.remove(filename);
 
   this->raw_open_file(filename);
-  this->_file.println(data);
+  this->_file.print(data);
   this->raw_close_file();
 }
 
