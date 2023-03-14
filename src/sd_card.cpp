@@ -5,8 +5,10 @@ SDCard::SDCard(SdCsPin_t cs_pin) noexcept {
 }
 
 void SDCard::raw_open_file(const String& filename, oflag_t mode) noexcept {
+  Serial.println(filename.c_str());
   if (!this->raw_file_is_opened()) {
     this->_file = _sd.open(filename, mode);
+    Serial.println(filename);
     assert(this->_file);
   }
 }
@@ -19,7 +21,6 @@ void SDCard::raw_close_file() noexcept {
 void SDCard::read_file(const String& filename, String& buffer) noexcept {
   if (!this->raw_file_is_opened())
     this->raw_open_file(filename);
-
   
   for (;;) {
     auto result = this->_file.read();

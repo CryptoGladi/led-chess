@@ -19,7 +19,8 @@ DynamicJsonDocument SettingsData::get_dynamic_json_document() noexcept {
 void SettingsManager::serialize(SettingsData data) noexcept {
   auto doc = data.get_dynamic_json_document();
 
-  this->_storage.raw_open_file(this->_filename_for_settings, O_WRITE);
+  this->_storage.get_raw_file().remove(SETTINGS_FILENAME);
+  this->_storage.raw_open_file(SETTINGS_FILENAME);
   serializeJsonPretty(doc, this->_storage.get_raw_file());
   this->_storage.raw_close_file();
 }
@@ -27,7 +28,7 @@ void SettingsManager::serialize(SettingsData data) noexcept {
 SettingsData SettingsManager::deserialize() noexcept {
   DynamicJsonDocument doc(SETTINGS_MAX_MEMORY_ALLOCATION);
 
-  this->_storage.raw_open_file(this->_filename_for_settings, O_READ);
+  this->_storage.raw_open_file(SETTINGS_FILENAME);
   deserializeJson(doc, this->_storage.get_raw_file());
   this->_storage.raw_close_file();
 

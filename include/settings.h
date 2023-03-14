@@ -5,6 +5,7 @@
 
 /// @brief Сколько можно потрать памяти на аллокацию
 static constexpr int SETTINGS_MAX_MEMORY_ALLOCATION = 1024;
+#define SETTINGS_FILENAME "settings.json"
 
 struct SettingsData {
   SettingsData(DynamicJsonDocument doc) noexcept;
@@ -37,13 +38,11 @@ struct SettingsManager {
   /// @param storage Куда сохранять наши настройки
   /// @param filename_for_settings Имя файла где будут храниться настройки
   SettingsManager(
-      SDCard& storage,
-      const String& filename_for_settings = "settings.json") noexcept
-      : _storage(storage), _filename_for_settings(filename_for_settings){};
+      SDCard& storage) noexcept
+      : _storage(storage){};
 
   /// @brief Сохранить настройки
   /// @param data Наши новые настройки
-  /// @return true - всё успешно
   void serialize(SettingsData data) noexcept;
 
   /// @brief Загрузить настройки
@@ -52,5 +51,4 @@ struct SettingsManager {
 
  private:
   SDCard& _storage;
-  const String& _filename_for_settings;
 };
