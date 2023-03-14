@@ -1,15 +1,10 @@
 #include <Arduino.h>
-#include "game_logic/game_logic.h"
+#include "settings.h"
 
 void setup() {
   Serial.begin(921600);
-
-  auto game_logic = game_logic::GameLogic();
-  auto matrix = game_logic.GetMatrix();
+  while (!Serial) {}
 }
 
 void loop() {
-  auto game_logic = game_logic::GameLogic();
-  auto matrix = game_logic.GetMatrix();
-  matrix.Print();
 }

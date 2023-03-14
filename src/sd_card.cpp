@@ -1,32 +1,53 @@
 #include "sd_card.h"
 
-bool SDCard::open_file(const String &filename, uint8_t mode) {
-    this->file = SD.open(filename, mode);
-    return this->file_is_opened();
+SDCard::SDCard(SdCsPin_t cs_pin) noexcept {
+  assert(this->_sd.begin(cs_pin));
 }
 
-bool SDCard::read_file(const String &filename, String &buffer) {
-    if (!this->open_file(filename, O_READ))
-        return false;
-
-    if (!this->file_is_opened())
-        return false;
-
-    buffer = String(this->file.read());
-    return true;
+void SDCard::raw_open_file(const String& filename, oflag_t mode) noexcept {
+  if (!this->raw_file_is_opened()) {
+    this->_file = _sd.open(filename, mode);
+    assert(this->_file);
+  }
 }
 
-bool SDCard::overwrite_file(const String &filename, const String &data) {
-    if (!SD.remove(filename)) 
-        return false;
-
-    if (!this->open_file(filename, O_WRITE))
-        return false;
-
-    this->file.println(data);
-    return true;   
+void SDCard::raw_close_file() noexcept {
+  if (this->raw_file_is_opened())
+    assert(this->_file.close());
 }
 
-bool SDCard::file_is_opened() {
-    return (this->file && this->file.available());
+void SDCard::read_file(const String& filename, String& buffer) noexcept {
+  if (!this->raw_file_is_opened())
+    this->raw_open_file(filename);
+  
+  for (;;) {
+    auto result = this->_file.read();
+
+    if (result == -1) {
+      break;
+    }
+
+    buffer += String(static_cast<char>(result));
+  }
+
+  buffer.trim();
+  this->raw_close_file();
+}
+
+void SDCard::overwrite_file(const String& filename,
+                            const String& data) noexcept {
+  this->raw_close_file();
+  this->_sd.remove(filename);
+
+  this->raw_open_file(filename);
+  this->_file.print(data);
+  this->raw_close_file();
+}
+
+bool SDCard::raw_file_is_opened() noexcept {
+  return this->_file;
+}
+
+File32& SDCard::get_raw_file() noexcept {
+  return this->_file;
 }
